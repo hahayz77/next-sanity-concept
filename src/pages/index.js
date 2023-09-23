@@ -20,7 +20,7 @@ export default function Home({ pet }) {
 
   return (
     <main className='grid place-content-center h-full w-full text-lg text-center gap-8 my-8 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-700'>
-      <h1 className='text-5xl'>Sanity and Next13 Template</h1>
+      <h1 className='text-5xl'>Sanity and Next 12 Template</h1>
       <p className='text-slate-500 font-bold'>Name and Image from Sanity dataset</p>
       <h2 className='text-4xl'>{name}</h2>
       <Image className='h-80 w-80 object-cover rounded-full mx-auto shadow-2xl' src={urlForImage(image).url()} alt={name} width={400} height={400} />
