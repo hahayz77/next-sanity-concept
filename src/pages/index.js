@@ -24,7 +24,7 @@ export default function Home({ pet }) {
       <p className='text-slate-500 font-bold'>Name and Image from Sanity dataset</p>
       <h2 className='text-4xl'>{name}</h2>
       <Image className='h-80 w-80 object-cover rounded-full mx-auto shadow-2xl' src={urlForImage(image).url()} alt={name} width={400} height={400} />
-      <Link className='hover:scale-110 duration-300 ease-in-out text-blue-500 font-bold' href={"https://github.com/hahayz77/next13-sanity-concept"} target='_blank'><u>GitHub Link</u></Link>
+      <Link className='hover:scale-110 duration-300 ease-in-out text-blue-500 font-bold' href={"https://github.com/hahayz77/next-sanity-concept"} target='_blank'><u>GitHub Link</u></Link>
     </main>
   )
 }
