@@ -1,40 +1,140 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ✅Sanity step by step
 
-## Getting Started
+‌
 
-First, run the development server:
+1. Install NextJS -> `npx create-next-app@latest`
+2. Install Sanity → `npm create sanity@latest`
+   1. Atention on say No to app directory on sanity installation
+3. Allow CORS origin on [https://www.sanity.io/manage](https://www.sanity.io/manage "‌")
+4. Change `.env` to `.env.local`, and configure the `dataset` and `projectID`
+5. Add images next.config file
+   1. ```javascript
+      // next.config.ts
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+      /** @type {import('next').NextConfig} */
+      const nextConfig = {};
+
+      module.exports = {
+        images: {
+          remotePatterns: [
+            {
+              protocol: "https",
+              hostname: "cdn.sanity.io",
+              port: "",
+            },
+          ],
+        },
+      };
+      ```
+6. Create a Schema on`sanity/schemas/`
+   1. ```javascript
+      export default {
+        name: 'pet',
+        type: 'document',
+        title: 'Pet',
+        fields: [
+          {
+            name: 'name',
+            type: 'string',
+            title: 'Name'
+          },
+          {
+            name: 'image',
+            type: 'image',
+            title: 'Image',
+            options: { hotspot: true  }
+          }
+        ]
+      }
+      ```
+7. Add on schema.js
+   1. ```javascript
+      import pet from './pet'
+
+      export const schemaTypes = [pet]
+      ```
+8. Create content on `/studio`
+9. Fetch the content
+   1. ```javascript
+      import { client } from '../../sanity/lib/client';
+
+      ...
+
+      export async function getStaticProps() {
+        const pet = await client.fetch(`*[_type == "pet"]`);
+        //console.log(pet);
+
+        return {
+          props: { pet }
+        }
+      }
+      ```
+10. Remember to fetch the first array after pass the object to the component
+    1. ```javascript
+       const Pet = ({pet}) => {
+
+           const { _id, name, image } = pet[0];
+       ...
+       }
+       ```
+11. ❗To use images you need to use this method urlForImage().url()
+    1. ```javascript
+       import { urlForImage } from '../../sanity/lib/image';
+       ...
+       <Image src={urlForImage(image).url()} alt={name} width={400} height={400} />
+       ...
+       ```
+       ‌
+
+# 🔰Important examples of schemas:
+
+‌
+
+- Document with nested array of object images
+
+```javascript
+export default {
+    title: 'Featured',
+    name: 'featured',
+    type: 'document',
+    fields: [
+        {
+            name: 'title',
+            type: 'string',
+            title: 'Title',
+            description: "Title of the featured",
+            validation: (Rule) => Rule.required()
+        },
+        {
+            name: 'images',
+            type: 'array',
+            title: 'Images',
+            description: "Upload 7 pictures and links",
+            of: [
+                {
+                    type: 'object',
+                    name: 'imageWithDescription',
+                    title: 'Image with Description',
+                    fields: [
+                        {
+                            name: 'image',
+                            type: 'image',
+                            title: 'Image',
+                            options: { hotspot: true },
+                            validation: (Rule) => Rule.required()
+                        },
+                        {
+                            name: 'link',
+                            type: 'string',
+                            title: 'Link',
+                            description: "Link url",
+                            validation: (Rule) => Rule.required()
+                        },
+                    ]
+                }
+            ],
+            validation: (Rule) => Rule.required().min(7).max(7).error('You must provide 7 images.')
+        },
+    ],
+}
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
