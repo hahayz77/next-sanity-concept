@@ -2,7 +2,7 @@
 
 ‌
 
-1. Install NextJS -> `npx create-next-app@latest`
+1. Install NextJS → `npx create-next-app@latest`
 2. Install Sanity → `npm create sanity@latest`
    1. Atention on say No to app directory on sanity installation
 3. Allow CORS origin on [https://www.sanity.io/manage](https://www.sanity.io/manage "‌")
